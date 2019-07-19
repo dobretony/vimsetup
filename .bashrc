@@ -1,23 +1,15 @@
 # =============================================================== #
 #
-# PERSONAL $HOME/.bashrc FILE for bash-3.0 (or later)
-# By Emmanuel Rouat [no-email]
+# PERSONAL $HOME/.bashrc FILE for bash-3.0 (or later) on MAC-OS
+# By Tony Dobre [dobre.tony@gmail.com]
 #
-# Last modified: Tue Nov 20 22:04:47 CET 2012
+# Based upon PERSONAL $HOME/.bashrc FILE by Emmanuel Rouat [no-email]
+#
+# Last modified: Wed Jul 10 19:06:27 CET 2019
 
 #  This file is normally read by interactive shells only.
 #+ Here is the place to define your aliases, functions and
 #+ other interactive features like your prompt.
-#
-#  The majority of the code here assumes you are on a GNU
-#+ system (most likely a Linux box) and is often based on code
-#+ found on Usenet or Internet.
-#
-#  See for instance:
-#  http://tldp.org/LDP/abs/html/index.html
-#  http://www.caliban.org/bash
-#  http://www.shelldorado.com/scripts/categories.html
-#  http://www.dotfiles.org
 #
 #  The choice of colors was done for a shell with a dark background
 #+ (white on black), and this is usually also suited for pure text-mode
@@ -55,34 +47,41 @@ fi
 #+ of cases.
 #--------------------------------------------------------------
 
-function get_xserver ()
-{
-    case $TERM in
-        xterm )
-            XSERVER=$(who am i | awk '{print $NF}' | tr -d ')''(' )
-            # Ane-Pieter Wieringa suggests the following alternative:
-            #  I_AM=$(who am i)
-            #  SERVER=${I_AM#*(}
-            #  SERVER=${SERVER%*)}
-            XSERVER=${XSERVER%%:*}
-            ;;
-            aterm | rxvt)
-            # Find some code that works here. ...
-            ;;
-    esac
-}
+# function get_xserver ()
+#{
+#    case $TERM in
+#        xterm )
+#            XSERVER=$(who am i | awk '{print $NF}' | tr -d ')''(' )
+#            # Ane-Pieter Wieringa suggests the following alternative:
+#            #  I_AM=$(who am i)
+#            #  SERVER=${I_AM#*(}
+#            #  SERVER=${SERVER%*)}
+#            XSERVER=${XSERVER%%:*}
+#            ;;
+#            aterm | rxvt)
+#            # Find some code that works here. ...
+#            ;;
+#    esac
+#}
 
-if [ -z ${DISPLAY:=""} ]; then
-    get_xserver
-    if [[ -z ${XSERVER}  || ${XSERVER} == $(hostname) ||
-       ${XSERVER} == "unix" ]]; then
-          DISPLAY=":0.0"          # Display on local host.
-    else
-       DISPLAY=${XSERVER}:0.0     # Display on remote host.
-    fi
-fi
+#if [ -z ${DISPLAY:=""} ]; then
+#    get_xserver
+#    if [[ -z ${XSERVER}  || ${XSERVER} == $(hostname) ||
+#       ${XSERVER} == "unix" ]]; then
+#          DISPLAY=":0.0"          # Display on local host.
+#    else
+#       DISPLAY=${XSERVER}:0.0     # Display on remote host.
+#    fi
+#fi
 
-export DISPLAY
+#export DISPLAY
+
+
+#-------------------------------------------------------------
+# Adding bash_completion
+#-------------------------------------------------------------
+
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 #-------------------------------------------------------------
 # Some settings
@@ -118,31 +117,34 @@ unset MAILCHECK        # Don't want my shell to warn me of incoming mail.
 # Greeting, motd etc. ...
 #-------------------------------------------------------------
 
-# Color definitions (taken from Color Bash Prompt HowTo).
+# Color definitions (taken from https://dobsondev.com/2014/02/21/customizing-your-terminal/).
 # Some colors might look different of some terminals.
 # For example, I see 'Bold Red' as 'orange' on my screen,
 # hence the 'Green' 'BRed' 'Red' sequence I often use in my prompt.
 
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
+export TERM=xterm-256color
 
 # Normal Colors
-Black='\e[0;30m'        # Black
-Red='\e[0;31m'          # Red
-Green='\e[0;32m'        # Green
-Yellow='\e[0;33m'       # Yellow
-Blue='\e[0;34m'         # Blue
-Purple='\e[0;35m'       # Purple
-Cyan='\e[0;36m'         # Cyan
-White='\e[0;37m'        # White
+Black="\[\033[0;30m\]"        # Black
+Red="\[\033[0;31m\]"          # Red
+Green="\[\033[0;32m\]"        # Green
+Yellow="\[\033[0;33m\]"       # Yellow
+Blue="\[\033[0;34m\]"         # Blue
+Purple="\[\033[0;35m\]"       # Purple
+Cyan="\[\033[0;36m\]"         # Cyan
+White="\[\033[0;37m\]"        # White
 
 # Bold
-BBlack='\e[1;30m'       # Black
-BRed='\e[1;31m'         # Red
-BGreen='\e[1;32m'       # Green
-BYellow='\e[1;33m'      # Yellow
-BBlue='\e[1;34m'        # Blue
-BPurple='\e[1;35m'      # Purple
-BCyan='\e[1;36m'        # Cyan
-BWhite='\e[1;37m'       # White
+BBlack="\[\033[1;30m\]"       # Black
+BRed="\[\033[1;31m\]"         # Red
+BGreen="\[\033[1;32m\]"       # Green
+BYellow="\[\033[1;33m\]"      # Yellow
+BBlue="\[\033[1;34m\]"        # Blue
+BPurple="\[\033[1;35m\]"      # Purple
+BCyan="\[\033[1;36m\]"        # Cyan
+BWhite="\[\033[1;37m\]"       # White
 
 # Background
 On_Black='\e[40m'       # Black
@@ -154,18 +156,14 @@ On_Purple='\e[45m'      # Purple
 On_Cyan='\e[46m'        # Cyan
 On_White='\e[47m'       # White
 
-NC="\e[m"               # Color Reset
-
+NC="\[\e[00m\]"               # Color Reset
 
 ALERT=${BWhite}${On_Red} # Bold White on red background
 
-
-
-echo -e "${BCyan}This is BASH ${BRed}${BASH_VERSION%.*}${BCyan}\
-- DISPLAY on ${BRed}$DISPLAY${NC}\n"
+echo -e "${BCyan}This is BASH ${BRed}${BASH_VERSION%.*}${BCyan}"
 date
-if [ -x /usr/games/fortune ]; then
-    /usr/games/fortune -s     # Makes our day a bit more fun.... :-)
+if [ -x /usr/local/bin/fortune ]; then
+    /usr/local/bin/fortune -s     # Makes our day a bit more fun.... :-)
 fi
 
 function _exit()              # Function to run upon exit of shell.
@@ -209,16 +207,6 @@ trap _exit EXIT
 #    Command is added to the history file each time you hit enter,
 #    so it's available to all shells (using 'history -a').
 
-
-# Test connection type:
-if [ -n "${SSH_CONNECTION}" ]; then
-    CNX=${Green}        # Connected on remote machine, via ssh (good).
-elif [[ "${DISPLAY%%:0*}" != "" ]]; then
-    CNX=${ALERT}        # Connected on remote machine, not via ssh (bad).
-else
-    CNX=${BCyan}        # Connected on local machine.
-fi
-
 # Test user type:
 if [[ ${USER} == "root" ]]; then
     SU=${Red}           # User is root.
@@ -228,68 +216,6 @@ else
     SU=${BCyan}         # User is normal (well ... most of us are).
 fi
 
-
-
-NCPU=$(grep -c 'processor' /proc/cpuinfo)    # Number of CPUs
-SLOAD=$(( 100*${NCPU} ))        # Small load
-MLOAD=$(( 200*${NCPU} ))        # Medium load
-XLOAD=$(( 400*${NCPU} ))        # Xlarge load
-
-# Returns system load as percentage, i.e., '40' rather than '0.40)'.
-function load()
-{
-    local SYSLOAD=$(cut -d " " -f1 /proc/loadavg | tr -d '.')
-    # System load of the current host.
-    echo $((10#$SYSLOAD))       # Convert to decimal.
-}
-
-# Returns a color indicating system load.
-function load_color()
-{
-    local SYSLOAD=$(load)
-    if [ ${SYSLOAD} -gt ${XLOAD} ]; then
-        echo -en ${ALERT}
-    elif [ ${SYSLOAD} -gt ${MLOAD} ]; then
-        echo -en ${Red}
-    elif [ ${SYSLOAD} -gt ${SLOAD} ]; then
-        echo -en ${BRed}
-    else
-        echo -en ${Green}
-    fi
-}
-
-# Returns a color according to free disk space in $PWD.
-function disk_color()
-{
-    if [ ! -w "${PWD}" ] ; then
-        echo -en ${Red}
-        # No 'write' privilege in the current directory.
-    elif [ -s "${PWD}" ] ; then
-        local used=$(command df -P "$PWD" |
-                   awk 'END {print $5} {sub(/%/,"")}')
-        if [ ${used} -gt 95 ]; then
-            echo -en ${Red}           # Disk almost full (>95%).
-        elif [ ${used} -gt 90 ]; then
-            echo -en ${BRed}            # Free disk space almost gone.
-        else
-            echo -en ${Green}           # Free disk space is ok.
-        fi
-    else
-        echo -en ${Cyan}
-        # Current directory is size '0' (like /proc, /sys etc).
-    fi
-}
-
-# Returns a color according to running/suspended jobs.
-function job_color()
-{
-    if [ $(jobs -s | wc -l) -gt "0" ]; then
-        echo -en ${BRed}
-    elif [ $(jobs -r | wc -l) -gt "0" ] ; then
-        echo -en ${BCyan}
-    fi
-}
-
 # Adds some text in the terminal frame (if applicable).
 
 
@@ -297,15 +223,15 @@ function job_color()
 PROMPT_COMMAND="history -a"
 case ${TERM} in
   *term | rxvt | linux)
-        PS1="\[\$(load_color)\][\A\[${NC}\] "
+        PS1="\[\${Green}\][\A\[${NC}\] "
         # Time of day (with load info):
-        PS1="\[\$(load_color)\][\A\[${NC}\] "
+        PS1="\[\${Green}\][\A\[${NC}\] "
         # User (with connection type info):
         PS1=${PS1}"\[${SU}\]\u\[${NC}\]>"
         # PWD (with 'disk space' info):
-        PS1=${PS1}"\[\$(disk_color)\]\w \[${NC}\]\$\[\$(load_color)\]]\[${NC}\]"
+        PS1=${PS1}"\[\${Green}\]\w \[${NC}\]\$\[\$(load_color)\]]\[${NC}\]"
         # Prompt (with 'job' info):
-        PS1=${PS1}"\[\$(job_color)\]:\[${NC}\] "
+        PS1=${PS1}"\[\${Green}\]:\[${NC}\] "
         # Set title of current xterm:
         PS1=${PS1}"\[\e]0;\u@\h:\W\a\]"
         ;;
@@ -363,7 +289,7 @@ alias df='df -kTh'
 # The 'ls' family (this assumes you use a recent GNU ls).
 #-------------------------------------------------------------
 # Add colors for filetype and  human-readable sizes by default on 'ls':
-alias ls='ls -h --color'
+alias ls='ls -GFh'
 alias lx='ls -lXB'         #  Sort by extension.
 alias lk='ls -lSr'         #  Sort by size, biggest last.
 alias lt='ls -ltr'         #  Sort by date, most recent last.
@@ -405,60 +331,10 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # Spelling typos - highly personnal and keyboard-dependent :-)
 #-------------------------------------------------------------
 
-alias xs='cd'
-alias vf='cd'
-alias moer='more'
-alias moew='more'
-alias kk='ll'
-alias cd..='cd ..'
-
-#-------------------------------------------------------------
-# A few fun ones
-#-------------------------------------------------------------
-
-# Adds some text in the terminal frame (if applicable).
-
-function xtitle()
-{
-    case "$TERM" in
-    *term* | rxvt)
-        echo -en  "\e]0;$*\a" ;;
-    *)  ;;
-    esac
-}
-
-
-# Aliases that use xtitle
-alias top='xtitle Processes on $HOST && top'
-alias make='xtitle Making $(basename $PWD) ; make'
-
-# .. and functions
-function man()
-{
-    for i ; do
-        xtitle The $(basename $1|tr -d .[:digit:]) manual
-        command man -a "$i"
-    done
-}
-
 
 #-------------------------------------------------------------
 # Make the following commands run in background automatically:
 #-------------------------------------------------------------
-
-function te()  # wrapper around xemacs/gnuserv
-{
-    if [ "$(gnuclient -batch -eval t 2>&-)" == "t" ]; then
-       gnuclient -q "$@";
-    else
-       ( xemacs "$@" &);
-    fi
-}
-
-function soffice() { command soffice "$@" & }
-function firefox() { command firefox "$@" & }
-function xpdf() { command xpdf "$@" & }
-function gedit() { command gedit "$@" & }
 
 
 #-------------------------------------------------------------
@@ -648,328 +524,10 @@ function corename()   # Get name of app that created a corefile.
     done
 }
 
-
-
-#=========================================================================
-#
-#  PROGRAMMABLE COMPLETION SECTION
-#  Most are taken from the bash 2.05 documentation and from Ian McDonald's
-# 'Bash completion' package (http://www.caliban.org/bash/#completion)
-#  You will in fact need bash more recent then 3.0 for some features.
-#
-#  Note that most linux distributions now provide many completions
-# 'out of the box' - however, you might need to make your own one day,
-#  so I kept those here as examples.
-#=========================================================================
-
-if [ "${BASH_VERSION%.*}" \< "3.0" ]; then
-    echo "You will need to upgrade to version 3.0 for full \
-          programmable completion features"
-    return
-fi
-
-shopt -s extglob        # Necessary.
-
-complete -A hostname   rsh rcp telnet rlogin ftp ping disk
-complete -A export     printenv
-complete -A variable   export local readonly unset
-complete -A enabled    builtin
-complete -A alias      alias unalias
-complete -A function   function
-complete -A user       su mail finger
-
-complete -A helptopic  help     # Currently same as builtins.
-complete -A shopt      shopt
-complete -A stopped -P '%' bg
-complete -A job -P '%'     fg jobs disown
-
-complete -A directory  mkdir rmdir
-complete -A directory   -o default cd
-
-# Compression
-complete -f -o default -X '*.+(zip|ZIP)'  zip
-complete -f -o default -X '!*.+(zip|ZIP)' unzip
-complete -f -o default -X '*.+(z|Z)'      compress
-complete -f -o default -X '!*.+(z|Z)'     uncompress
-complete -f -o default -X '*.+(gz|GZ)'    gzip
-complete -f -o default -X '!*.+(gz|GZ)'   gunzip
-complete -f -o default -X '*.+(bz2|BZ2)'  bzip2
-complete -f -o default -X '!*.+(bz2|BZ2)' bunzip2
-complete -f -o default -X '!*.+(zip|ZIP|z|Z|gz|GZ|bz2|BZ2)' extract
-
-
-# Documents - Postscript,pdf,dvi.....
-complete -f -o default -X '!*.+(ps|PS)'  gs ghostview ps2pdf ps2ascii
-complete -f -o default -X \
-'!*.+(dvi|DVI)' dvips dvipdf xdvi dviselect dvitype
-complete -f -o default -X '!*.+(pdf|PDF)' acroread pdf2ps
-complete -f -o default -X '!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?\
-(.gz|.GZ|.bz2|.BZ2|.Z))' gv ggv
-complete -f -o default -X '!*.texi*' makeinfo texi2dvi texi2html texi2pdf
-complete -f -o default -X '!*.tex' tex latex slitex
-complete -f -o default -X '!*.lyx' lyx
-complete -f -o default -X '!*.+(htm*|HTM*)' lynx html2ps
-complete -f -o default -X \
-'!*.+(doc|DOC|xls|XLS|ppt|PPT|sx?|SX?|csv|CSV|od?|OD?|ott|OTT)' soffice
-
-# Multimedia
-complete -f -o default -X \
-'!*.+(gif|GIF|jp*g|JP*G|bmp|BMP|xpm|XPM|png|PNG)' xv gimp ee gqview
-complete -f -o default -X '!*.+(mp3|MP3)' mpg123 mpg321
-complete -f -o default -X '!*.+(ogg|OGG)' ogg123
-complete -f -o default -X \
-'!*.@(mp[23]|MP[23]|ogg|OGG|wav|WAV|pls|\
-m3u|xm|mod|s[3t]m|it|mtm|ult|flac)' xmms
-complete -f -o default -X '!*.@(mp?(e)g|MP?(E)G|wma|avi|AVI|\
-asf|vob|VOB|bin|dat|vcd|ps|pes|fli|viv|rm|ram|yuv|mov|MOV|qt|\
-QT|wmv|mp3|MP3|ogg|OGG|ogm|OGM|mp4|MP4|wav|WAV|asx|ASX)' xine
-
-
-
-complete -f -o default -X '!*.pl'  perl perl5
-
-
-#  This is a 'universal' completion function - it works when commands have
-#+ a so-called 'long options' mode , ie: 'ls --all' instead of 'ls -a'
-#  Needs the '-o' option of grep
-#+ (try the commented-out version if not available).
-
-#  First, remove '=' from completion word separators
-#+ (this will allow completions like 'ls --color=auto' to work correctly).
-
-COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
-
-
-_get_longopts()
-{
-  #$1 --help | sed  -e '/--/!d' -e 's/.*--\([^[:space:].,]*\).*/--\1/'| \
-  #grep ^"$2" |sort -u ;
-    $1 --help | grep -o -e "--[^[:space:].,]*" | grep -e "$2" |sort -u
-}
-
-_longopts()
-{
-    local cur
-    cur=${COMP_WORDS[COMP_CWORD]}
-
-    case "${cur:-*}" in
-       -*)      ;;
-        *)      return ;;
-    esac
-
-    case "$1" in
-       \~*)     eval cmd="$1" ;;
-         *)     cmd="$1" ;;
-    esac
-    COMPREPLY=( $(_get_longopts ${1} ${cur} ) )
-}
-complete  -o default -F _longopts configure bash
-complete  -o default -F _longopts wget id info a2ps ls recode
-
-_tar()
-{
-    local cur ext regex tar untar
-
-    COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
-
-    # If we want an option, return the possible long options.
-    case "$cur" in
-        -*)     COMPREPLY=( $(_get_longopts $1 $cur ) ); return 0;;
-    esac
-
-    if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $( compgen -W 'c t x u r d A' -- $cur ) )
-        return 0
-    fi
-
-    case "${COMP_WORDS[1]}" in
-        ?(-)c*f)
-            COMPREPLY=( $( compgen -f $cur ) )
-            return 0
-            ;;
-        +([^Izjy])f)
-            ext='tar'
-            regex=$ext
-            ;;
-        *z*f)
-            ext='tar.gz'
-            regex='t\(ar\.\)\(gz\|Z\)'
-            ;;
-        *[Ijy]*f)
-            ext='t?(ar.)bz?(2)'
-            regex='t\(ar\.\)bz2\?'
-            ;;
-        *)
-            COMPREPLY=( $( compgen -f $cur ) )
-            return 0
-            ;;
-
-    esac
-
-    if [[ "$COMP_LINE" == tar*.$ext' '* ]]; then
-        # Complete on files in tar file.
-        #
-        # Get name of tar file from command line.
-        tar=$( echo "$COMP_LINE" | \
-                        sed -e 's|^.* \([^ ]*'$regex'\) .*$|\1|' )
-        # Devise how to untar and list it.
-        untar=t${COMP_WORDS[1]//[^Izjyf]/}
-
-        COMPREPLY=( $( compgen -W "$( echo $( tar $untar $tar \
-                                2>/dev/null ) )" -- "$cur" ) )
-        return 0
-
-    else
-        # File completion on relevant files.
-        COMPREPLY=( $( compgen -G $cur\*.$ext ) )
-
-    fi
-
-    return 0
-
-}
-
-complete -F _tar -o default tar
-
-_make()
-{
-    local mdef makef makef_dir="." makef_inc gcmd cur prev i;
-    COMPREPLY=();
-    cur=${COMP_WORDS[COMP_CWORD]};
-    prev=${COMP_WORDS[COMP_CWORD-1]};
-    case "$prev" in
-        -*f)
-            COMPREPLY=($(compgen -f $cur ));
-            return 0
-            ;;
-    esac;
-    case "$cur" in
-        -*)
-            COMPREPLY=($(_get_longopts $1 $cur ));
-            return 0
-            ;;
-    esac;
-
-    # ... make reads
-    #          GNUmakefile,
-    #     then makefile
-    #     then Makefile ...
-    if [ -f ${makef_dir}/GNUmakefile ]; then
-        makef=${makef_dir}/GNUmakefile
-    elif [ -f ${makef_dir}/makefile ]; then
-        makef=${makef_dir}/makefile
-    elif [ -f ${makef_dir}/Makefile ]; then
-        makef=${makef_dir}/Makefile
-    else
-       makef=${makef_dir}/*.mk         # Local convention.
-    fi
-
-
-    #  Before we scan for targets, see if a Makefile name was
-    #+ specified with -f.
-    for (( i=0; i < ${#COMP_WORDS[@]}; i++ )); do
-        if [[ ${COMP_WORDS[i]} == -f ]]; then
-            # eval for tilde expansion
-            eval makef=${COMP_WORDS[i+1]}
-            break
-        fi
-    done
-    [ ! -f $makef ] && return 0
-
-    # Deal with included Makefiles.
-    makef_inc=$( grep -E '^-?include' $makef |
-                 sed -e "s,^.* ,"$makef_dir"/," )
-    for file in $makef_inc; do
-        [ -f $file ] && makef="$makef $file"
-    done
-
-
-    #  If we have a partial word to complete, restrict completions
-    #+ to matches of that word.
-    if [ -n "$cur" ]; then gcmd='grep "^$cur"' ; else gcmd=cat ; fi
-
-    COMPREPLY=( $( awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ \
-                               {split($1,A,/ /);for(i in A)print A[i]}' \
-                                $makef 2>/dev/null | eval $gcmd  ))
-
-}
-
-complete -F _make -X '+($*|*.[cho])' make gmake pmake
-
-
-
-
-_killall()
-{
-    local cur prev
-    COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
-
-    #  Get a list of processes
-    #+ (the first sed evaluation
-    #+ takes care of swapped out processes, the second
-    #+ takes care of getting the basename of the process).
-    COMPREPLY=( $( ps -u $USER -o comm  | \
-        sed -e '1,1d' -e 's#[]\[]##g' -e 's#^.*/##'| \
-        awk '{if ($0 ~ /^'$cur'/) print $0}' ))
-
-    return 0
-}
-
-complete -F _killall killall killps
-
-source ~/git-completion.bash
-
 #############################################################
 # Functions and aliases needed by current work.
 #############################################################
 
-# Runs flake8 on the git diff of a Python file.
-# Needed because of DDK.
-pep8_check() { 
-
-#git show --unified=0 $1 | flake8 --diff
-git diff HEAD~1 --unified=0 -M1% src tests | flake8 --diff
-
-}
-
-# Alias for pushing the current patch on the current branch
-alias push_me="git push origin HEAD:refs/for/abt/topic/gmin/staging/scale/master"
 
 
-# Local Variables:
-export PATH=$PATH:$HOME/bin
-export PATH=$PATH:/opt/android-sdk/tools
-export PATH=$PATH:/opt/android-ndk/android-ndk-r10d/
-export PATH=$PATH:/opt/pycharm/pycharm-community-4.5.2/bin
-export USE_CCACHE=1
-
-# Local functions
-
-#SSH_ENV=$HOME/.ssh/environment
-   
-# start the ssh-agent
-#function start_agent {
-#    echo "Initializing new SSH agent..."
-    # spawn ssh-agent
-#    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-#    echo succeeded
-#    chmod 600 "${SSH_ENV}"
-#    . "${SSH_ENV}" > /dev/null
-#    /usr/bin/ssh-add
-#}
-   
-#if [ -f "${SSH_ENV}" ]; then
-#     . "${SSH_ENV}" > /dev/null
-#     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-#        start_agent;
-#    }
-#else
-#    start_agent;
-#fi
-
-
-# mode:shell-script
-# sh-shell:bash
 # End:
